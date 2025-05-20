@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Mohan Restaurant</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <style>
+	
+	
+        body {
+            background-color: #f5f5f5;
+        }
+        h4 {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .card {
+            background: #ffffff;
+            padding: 20px;
+            margin: 20px auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .item-row {
+            margin-top: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .btn {
+            margin-left: 5px;
+        }
+        .bg-title {
+            background-color: #343a40;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .bill-section {
+            margin-top: 30px;
+        }
+    </style>
+	<script>
+        $(document).ready(function () {
+            const prices = { berger: 250, colddrink: 150, pizza: 450, chicken: 75 };
+            let sum = 0, items = "";
+
+            function updateUI() {
+                $('#itme_name').text('Items = ' + items);
+                $('#Sumtest1').text('Total = ' + sum);
+            }
+
+            function addItem(type) {
+                const qty = parseInt($(`#${type}qty`).val()) || 0;
+                if (qty === 0) return alert('Please add a quantity.');
+                items += `${type.charAt(0).toUpperCase() + type.slice(1)},`;
+                sum += qty * prices[type];
+                updateUI();
+            }
+
+            function removeItem(type) {
+                const qty = parseInt($(`#${type}qty`).val()) || 0;
+                if (qty === 0) return alert('Please add a quantity.');
+                items = items.replace(`${type.charAt(0).toUpperCase() + type.slice(1)},`, '');
+                sum -= qty * prices[type];
+                $(`#${type}qty`).val('');
+                updateUI();
+            }
+
+            ['berger', 'colddrink', 'pizza', 'chicken'].forEach(item => {
+                $(`#add${capitalize(item)}`).click(() => addItem(item));
+                $(`#remove${capitalize(item)}`).click(() => removeItem(item));
+            });
+
+            function capitalize(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h4 class="text-center text-primary"><u>Mohan Restaurant</u></h4>
+
+        <div class="row">
+            <!-- Menu Section -->
+            <div class="col-md-8">
+                <div class="card">
+                    <h4><u>Item Description</u></h4>
+                    <div class="row bg-title text-center">
+                        <div class="col-sm-3">Product</div>
+                        <div class="col-sm-2">Price</div>
+                        <div class="col-sm-2">Quantity</div>
+                        <div class="col-sm-5">Actions</div>
+                    </div>
+
+                    <!-- Items -->
+                    <div class="row item-row text-center">
+                        <div class="col-sm-3">Berger</div>
+                        <div class="col-sm-2">250</div>
+                        <div class="col-sm-2"><input type="text" id="bergerqty" class="form-control" /></div>
+                        <div class="col-sm-5">
+                            <button class="btn btn-success" id="addBerger">ADD</button>
+                            <button class="btn btn-danger" id="removeBerger">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="row item-row text-center">
+                        <div class="col-sm-3">Cold-drink</div>
+                        <div class="col-sm-2">150</div>
+                        <div class="col-sm-2"><input type="text" id="colddrinkqty" class="form-control" /></div>
+                        <div class="col-sm-5">
+                            <button class="btn btn-success" id="addColddrink">ADD</button>
+                            <button class="btn btn-danger" id="removeColddrink">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="row item-row text-center">
+                        <div class="col-sm-3">Pizza</div>
+                        <div class="col-sm-2">450</div>
+                        <div class="col-sm-2"><input type="text" id="pizzaqty" class="form-control" /></div>
+                        <div class="col-sm-5">
+                            <button class="btn btn-success" id="addPizza">ADD</button>
+                            <button class="btn btn-danger" id="removePizza">Remove</button>
+                        </div>
+                    </div>
+
+                    <div class="row item-row text-center">
+                        <div class="col-sm-3">Chicken Roll</div>
+                        <div class="col-sm-2">75</div>
+                        <div class="col-sm-2"><input type="text" id="chickenqty" class="form-control" /></div>
+                        <div class="col-sm-5">
+                            <button class="btn btn-success" id="addChicken">ADD</button>
+                            <button class="btn btn-danger" id="removeChicken">Remove</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bill Section -->
+            <div class="col-md-4">
+                <div class="card bill-section">
+                    <h4><u>Bill Details</u></h4>
+                    <div id="itme_name" class="text-info" style="margin-top:10px;"></div>
+                    <div id="Sumtest1" class="text-success" style="font-weight: bold; font-size: 16px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
