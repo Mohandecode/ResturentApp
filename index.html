@@ -40,41 +40,53 @@
             margin-top: 30px;
         }
     </style>
-	<script>
-        $(document).ready(function () {
+	    <script>
+        document.addEventListener("DOMContentLoaded", function () {
             const prices = { berger: 250, colddrink: 150, pizza: 450, chicken: 75 };
             let sum = 0, items = "";
 
             function updateUI() {
-                $('#itme_name').text('Items = ' + items);
-                $('#Sumtest1').text('Total = ' + sum);
+                document.getElementById('itme_name').textContent = 'Items = ' + items;
+                document.getElementById('Sumtest1').textContent = 'Total = ' + sum;
             }
 
             function addItem(type) {
-                const qty = parseInt($(`#${type}qty`).val()) || 0;
-                if (qty === 0) return alert('Please add a quantity.');
-                items += `${type.charAt(0).toUpperCase() + type.slice(1)},`;
+                const qtyInput = document.getElementById(type + 'qty');
+                const qty = parseInt(qtyInput.value) || 0;
+                if (qty === 0) {
+                    alert('Please add a quantity.');
+                    return;
+                }
+                items += capitalize(type) + ",";
                 sum += qty * prices[type];
                 updateUI();
             }
 
             function removeItem(type) {
-                const qty = parseInt($(`#${type}qty`).val()) || 0;
-                if (qty === 0) return alert('Please add a quantity.');
-                items = items.replace(`${type.charAt(0).toUpperCase() + type.slice(1)},`, '');
+                const qtyInput = document.getElementById(type + 'qty');
+                const qty = parseInt(qtyInput.value) || 0;
+                if (qty === 0) {
+                    alert('Please add a quantity.');
+                    return;
+                }
+                items = items.replace(capitalize(type) + ",", '');
                 sum -= qty * prices[type];
-                $(`#${type}qty`).val('');
+                qtyInput.value = '';
                 updateUI();
             }
-
-            ['berger', 'colddrink', 'pizza', 'chicken'].forEach(item => {
-                $(`#add${capitalize(item)}`).click(() => addItem(item));
-                $(`#remove${capitalize(item)}`).click(() => removeItem(item));
-            });
 
             function capitalize(str) {
                 return str.charAt(0).toUpperCase() + str.slice(1);
             }
+
+            ['berger', 'colddrink', 'pizza', 'chicken'].forEach(item => {
+                document.getElementById('add' + capitalize(item)).addEventListener('click', function () {
+                    addItem(item);
+                });
+                document.getElementById('remove' + capitalize(item)).addEventListener('click', function () {
+                    removeItem(item);
+                });
+            });
         });
     </script>
 </head>
