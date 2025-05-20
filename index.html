@@ -2,12 +2,8 @@
 <html>
 <head>
     <title>Mohan Restaurant</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <style>
-	
-	
         body {
             background-color: #f5f5f5;
         }
@@ -27,9 +23,6 @@
             padding: 10px 0;
             border-bottom: 1px solid #e0e0e0;
         }
-        .btn {
-            margin-left: 5px;
-        }
         .bg-title {
             background-color: #343a40;
             color: white;
@@ -40,55 +33,6 @@
             margin-top: 30px;
         }
     </style>
-	    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const prices = { berger: 250, colddrink: 150, pizza: 450, chicken: 75 };
-            let sum = 0, items = "";
-
-            function updateUI() {
-                document.getElementById('itme_name').textContent = 'Items = ' + items;
-                document.getElementById('Sumtest1').textContent = 'Total = ' + sum;
-            }
-
-            function addItem(type) {
-                const qtyInput = document.getElementById(type + 'qty');
-                const qty = parseInt(qtyInput.value) || 0;
-                if (qty === 0) {
-                    alert('Please add a quantity.');
-                    return;
-                }
-                items += capitalize(type) + ",";
-                sum += qty * prices[type];
-                updateUI();
-            }
-
-            function removeItem(type) {
-                const qtyInput = document.getElementById(type + 'qty');
-                const qty = parseInt(qtyInput.value) || 0;
-                if (qty === 0) {
-                    alert('Please add a quantity.');
-                    return;
-                }
-                items = items.replace(capitalize(type) + ",", '');
-                sum -= qty * prices[type];
-                qtyInput.value = '';
-                updateUI();
-            }
-
-            function capitalize(str) {
-                return str.charAt(0).toUpperCase() + str.slice(1);
-            }
-
-            ['berger', 'colddrink', 'pizza', 'chicken'].forEach(item => {
-                document.getElementById('add' + capitalize(item)).addEventListener('click', function () {
-                    addItem(item);
-                });
-                document.getElementById('remove' + capitalize(item)).addEventListener('click', function () {
-                    removeItem(item);
-                });
-            });
-        });
-    </script>
 </head>
 <body>
     <div class="container">
@@ -103,48 +47,33 @@
                         <div class="col-sm-3">Product</div>
                         <div class="col-sm-2">Price</div>
                         <div class="col-sm-2">Quantity</div>
-                        <div class="col-sm-5">Actions</div>
+                        <div class="col-sm-5">Action</div>
                     </div>
 
                     <!-- Items -->
                     <div class="row item-row text-center">
                         <div class="col-sm-3">Berger</div>
                         <div class="col-sm-2">250</div>
-                        <div class="col-sm-2"><input type="text" id="bergerqty" class="form-control" /></div>
-                        <div class="col-sm-5">
-                            <button class="btn btn-success" id="addBerger">ADD</button>
-                            <button class="btn btn-danger" id="removeBerger">Remove</button>
-                        </div>
+                        <div class="col-sm-2"><input type="number" min="0" id="bergerqty" class="form-control" /></div>
+                        <div class="col-sm-5">Auto Update</div>
                     </div>
-
                     <div class="row item-row text-center">
                         <div class="col-sm-3">Cold-drink</div>
                         <div class="col-sm-2">150</div>
-                        <div class="col-sm-2"><input type="text" id="colddrinkqty" class="form-control" /></div>
-                        <div class="col-sm-5">
-                            <button class="btn btn-success" id="addColddrink">ADD</button>
-                            <button class="btn btn-danger" id="removeColddrink">Remove</button>
-                        </div>
+                        <div class="col-sm-2"><input type="number" min="0" id="colddrinkqty" class="form-control" /></div>
+                        <div class="col-sm-5">Auto Update</div>
                     </div>
-
                     <div class="row item-row text-center">
                         <div class="col-sm-3">Pizza</div>
                         <div class="col-sm-2">450</div>
-                        <div class="col-sm-2"><input type="text" id="pizzaqty" class="form-control" /></div>
-                        <div class="col-sm-5">
-                            <button class="btn btn-success" id="addPizza">ADD</button>
-                            <button class="btn btn-danger" id="removePizza">Remove</button>
-                        </div>
+                        <div class="col-sm-2"><input type="number" min="0" id="pizzaqty" class="form-control" /></div>
+                        <div class="col-sm-5">Auto Update</div>
                     </div>
-
                     <div class="row item-row text-center">
                         <div class="col-sm-3">Chicken Roll</div>
                         <div class="col-sm-2">75</div>
-                        <div class="col-sm-2"><input type="text" id="chickenqty" class="form-control" /></div>
-                        <div class="col-sm-5">
-                            <button class="btn btn-success" id="addChicken">ADD</button>
-                            <button class="btn btn-danger" id="removeChicken">Remove</button>
-                        </div>
+                        <div class="col-sm-2"><input type="number" min="0" id="chickenqty" class="form-control" /></div>
+                        <div class="col-sm-5">Auto Update</div>
                     </div>
                 </div>
             </div>
@@ -159,5 +88,44 @@
             </div>
         </div>
     </div>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', function () {
+            const prices = {
+                berger: 250,
+                colddrink: 150,
+                pizza: 450,
+                chicken: 75
+            };
+
+            function capitalize(str) {
+                return str.charAt(0).toUpperCase() + str.slice(1);
+            }
+
+            function updateBill() {
+                let total = 0;
+                let itemList = [];
+
+                for (let key in prices) {
+                    const qtyInput = document.getElementById(key + 'qty');
+                    const qty = parseInt(qtyInput.value) || 0;
+
+                    if (qty > 0) {
+                        total += qty * prices[key];
+                        itemList.push(`${capitalize(key)} x ${qty}`);
+                    }
+                }
+
+                document.getElementById('itme_name').textContent = 'Items = ' + itemList.join(', ');
+                document.getElementById('Sumtest1').textContent = 'Total = ' + total;
+            }
+
+            // Attach input listeners
+            for (let key in prices) {
+                const input = document.getElementById(key + 'qty');
+                input.addEventListener('input', updateBill);
+            }
+        });
+    </script>
 </body>
 </html>
